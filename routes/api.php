@@ -8,6 +8,8 @@ use App\Http\Controllers\api\customers\CustomerController;
 use App\Http\Controllers\api\orders\OrderController;
 use App\Http\Controllers\api\categories\CategoryController;
 use App\Http\Controllers\api\suppliers\SupplierController;
+use App\Http\Controllers\api\products\ProductController;
+use App\Http\Controllers\api\inventories\InventoryController;
 
 // Register & login routes
 Route::post('auth/register', [AuthController::class, 'register']);
@@ -45,5 +47,17 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('suppliers/index', [SupplierController::class, 'index']);
     Route::put('suppliers/update/{id}', [SupplierController::class, 'update']);
     Route::delete('suppliers/delete/{id}', [SupplierController::class, 'delete']);
+
+    // Products routes
+    Route::post('products/create', [ProductController::class, 'create']);
+    Route::get('products/index', [ProductController::class, 'index']);
+    Route::put('products/update/{id}', [ProductController::class, 'update']);
+    Route::delete('products/delete/{id}', [ProductController::class, 'delete']);
+
+    // Inventories routes
+    Route::post('inventories/create', [InventoryController::class, 'create']);
+    Route::get('inventories/index', [InventoryController::class, 'index']);
+    Route::put('inventories/update/{id}', [InventoryController::class, 'update']);
+    Route::delete('inventories/delete/{id}', [InventoryController::class, 'delete']);
     
 });
