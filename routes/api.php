@@ -10,6 +10,8 @@ use App\Http\Controllers\api\categories\CategoryController;
 use App\Http\Controllers\api\suppliers\SupplierController;
 use App\Http\Controllers\api\products\ProductController;
 use App\Http\Controllers\api\inventories\InventoryController;
+use App\Http\Controllers\api\permissions\PermissionController;
+use App\Http\Controllers\api\orderproduct\OrderProductController;
 
 // Register & login routes
 Route::post('auth/register', [AuthController::class, 'register']);
@@ -22,6 +24,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Roles routes
     Route::post('roles/create', [RoleController::class, 'create']);
+    Route::get('roles/index', [RoleController::class, 'index']);
+    Route::put('roles/update/{id}', [RoleController::class, 'update']);
+    Route::delete('roles/delete/{id}', [RoleController::class, 'delete']);
 
 
     // Customers routes
@@ -59,5 +64,17 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('inventories/index', [InventoryController::class, 'index']);
     Route::put('inventories/update/{id}', [InventoryController::class, 'update']);
     Route::delete('inventories/delete/{id}', [InventoryController::class, 'delete']);
+
+    // Permissions routes
+    Route::post('permissions/create', [PermissionController::class, 'create']);
+    Route::get('permissions/index', [PermissionController::class, 'index']);
+    Route::put('permissions/update/{id}', [PermissionController::class, 'update']);
+    Route::delete('permissions/delete/{id}', [PermissionController::class, 'delete']);
+
+    // OrderProduct routes
+    Route::post('orders/{orderId}/products/{productId}/create', [OrderProductController::class, 'addProductToOrder']);
+    Route::get('orders/products/index', [OrderProductController::class, 'getAllOrderProducts']);
+    Route::put('orders/{orderId}/products/{productId}/update', [OrderProductController::class, 'updateProductInOrder']);
+    Route::delete('orders/{orderId}/products/{productId}/delete', [OrderProductController::class, 'deleteProductFromOrder']);
     
 });

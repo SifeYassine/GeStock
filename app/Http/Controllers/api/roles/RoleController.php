@@ -42,4 +42,21 @@ class RoleController extends Controller
             ], 500);
         }
     }
+
+    // Get all roles
+    public function index()
+    {
+        try {
+            $roles = Role::all();
+            return response()->json([
+                'status' => true,
+                'message' => 'Roles fetched successfully',
+                'roles' => $roles,
+            ], 200);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'message' => $th->getMessage()
+            ], 500);
+        }
+    }
 }
