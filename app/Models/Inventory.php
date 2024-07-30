@@ -15,4 +15,9 @@ class Inventory extends Model
         'current_stock',
         'location',
     ];
+
+    public function products()
+    {
+        return $this->belongsToMany(Product::class)->withPivot('quantity')->withTimestamps();
+    }
 }

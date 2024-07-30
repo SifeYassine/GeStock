@@ -12,6 +12,7 @@ use App\Http\Controllers\api\products\ProductController;
 use App\Http\Controllers\api\inventories\InventoryController;
 use App\Http\Controllers\api\permissions\PermissionController;
 use App\Http\Controllers\api\orderproduct\OrderProductController;
+use App\Http\Controllers\api\inventoryproduct\InventoryProductController;
 
 // Register & login routes
 Route::post('auth/register', [AuthController::class, 'register']);
@@ -76,5 +77,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('orders/products/index', [OrderProductController::class, 'getAllOrderProducts']);
     Route::put('orders/{orderId}/products/{productId}/update', [OrderProductController::class, 'updateProductInOrder']);
     Route::delete('orders/{orderId}/products/{productId}/delete', [OrderProductController::class, 'deleteProductFromOrder']);
+
+    // InventoryProduct routes
+    Route::post('inventories/{inventoryId}/products/{productId}/create', [InventoryProductController::class, 'addProductToInventory']);
+    Route::get('inventories/products/index', [InventoryProductController::class, 'getAllInventoryProducts']);
+    Route::put('inventories/{inventoryId}/products/{productId}/update', [InventoryProductController::class, 'updateProductInInventory']);
+    Route::delete('inventories/{inventoryId}/products/{productId}/delete', [InventoryProductController::class, 'deleteProductFromInventory']);
     
 });
