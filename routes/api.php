@@ -13,6 +13,7 @@ use App\Http\Controllers\api\inventories\InventoryController;
 use App\Http\Controllers\api\permissions\PermissionController;
 use App\Http\Controllers\api\orderproduct\OrderProductController;
 use App\Http\Controllers\api\inventoryproduct\InventoryProductController;
+use App\Http\Controllers\api\permissionrole\PermissionRoleController;
 
 // Register & login routes
 Route::post('auth/register', [AuthController::class, 'register']);
@@ -83,5 +84,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('inventories/products/index', [InventoryProductController::class, 'getAllInventoryProducts']);
     Route::put('inventories/{inventoryId}/products/{productId}/update', [InventoryProductController::class, 'updateProductInInventory']);
     Route::delete('inventories/{inventoryId}/products/{productId}/delete', [InventoryProductController::class, 'deleteProductFromInventory']);
+
+    // PermissionRole routes
+    Route::post('permissions/{permissionId}/roles/{roleId}/create', [PermissionRoleController::class, 'addPermissionToRole']);
+    Route::get('permissions/roles/index', [PermissionRoleController::class, 'getAllPermissionRoles']);
+    Route::delete('permissions/{permissionId}/roles/{roleId}/delete', [PermissionRoleController::class, 'deletePermissionFromRole']);
     
 });

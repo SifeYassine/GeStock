@@ -59,4 +59,73 @@ class RoleController extends Controller
             ], 500);
         }
     }
+
+    // Update a role
+    public function update(Request $request, $id)
+    {
+        try {
+            $role = Role::find($id);
+
+            if (!$role) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Role not found',
+                ], 404);
+            }
+
+            $validateRole = Validator::make($request->all(), [
+                'name' => 'required|string|max:255',
+                'description' => 'required|string|max:255',
+            ]);
+
+            if ($validateRole->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Validation error',
+                    'errors' => $validateRole->errors()
+                ], 401);
+            }
+
+            $role->update([
+                'name' => $request->name,
+                'description' => $request->description
+            ]);
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Role updated successfully',
+                'role' => $role,
+            ], 200);
+
+        } catch (\Throwable $th) {
+            return response()->json([
+                'message' => $th->getMessage()
+            ], 500);
+        }
+    }
+
+    // Delete a role
+    public function delete($id)
+    {
+        try {
+            $role = Role::find($id);
+
+            if (!$role) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Role not found',
+                ], 404);
+            }
+
+            $role->delete();
+            return response()->json([
+                'status' => true,
+                'message' => 'Role deleted successfully',
+            ], 200);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'message' => $th->getMessage()
+            ], 500);
+        }
+    }
 }

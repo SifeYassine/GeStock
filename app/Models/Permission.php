@@ -11,8 +11,12 @@ class Permission extends Model
     use HasApiTokens, HasFactory;
 
     protected $fillable = [
-        'name',
         'label',
         'description',
     ];
+
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class)->withTimestamps();
+    }
 }
