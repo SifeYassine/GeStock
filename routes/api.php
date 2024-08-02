@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\api\auth\AuthController;
 use App\Http\Controllers\api\roles\RoleController;
+use App\Http\Controllers\api\users\UserController;
 use App\Http\Controllers\api\customers\CustomerController;
 use App\Http\Controllers\api\orders\OrderController;
 use App\Http\Controllers\api\categories\CategoryController;
@@ -19,17 +20,43 @@ use App\Http\Controllers\api\permissionrole\PermissionRoleController;
 Route::post('auth/register', [AuthController::class, 'register']);
 Route::post('auth/login', [AuthController::class, 'login']);
 
-// Protected routes
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware(['auth:sanctum'])->group(function () {
+    // Roles & Permissions CRUD routes with Role (Admin) middleware
+    Route::post('roles/create', [RoleController::class, 'create'])
+        ->middleware('role:Admin');
+    Route::get('roles/index', [RoleController::class, 'index'])
+        ->middleware('role:Admin');
+    Route::put('roles/update/{id}', [RoleController::class, 'update'])
+        ->middleware('role:Admin');
+    Route::delete('roles/delete/{id}', [RoleController::class, 'delete'])
+        ->middleware('role:Admin');
+
+    Route::post('permissions/create', [PermissionController::class, 'create'])
+        ->middleware('role:Admin');
+    Route::get('permissions/index', [PermissionController::class, 'index'])
+        ->middleware('role:Admin');
+    Route::put('permissions/update/{id}', [PermissionController::class, 'update'])
+        ->middleware('role:Admin');
+    Route::delete('permissions/delete/{id}', [PermissionController::class, 'delete'])
+        ->middleware('role:Admin');
+
+    Route::post('roles/{roleId}/permissions/{permissionId}/create', [PermissionRoleController::class, 'addPermissionToRole'])
+        ->middleware('role:Admin');
+    Route::get('roles/permissions/index', [PermissionRoleController::class, 'getAllPermissionRoles'])
+        ->middleware('role:Admin');
+    Route::delete('roles/{roleId}/permissions/{permissionId}/delete', [PermissionRoleController::class, 'deletePermissionFromRole'])
+        ->middleware('role:Admin');   
+
+    // Users CRUD routes with Permissions middleware
+    Route::get('users/index', [UserController::class, 'index'])
+        ->middleware('permission:Index users');
+    Route::put('users/update/{id}', [UserController::class, 'update'])
+        ->middleware('permission:Update user');
+    Route::delete('users/delete/{id}', [UserController::class, 'delete'])
+        ->middleware('permission:Delete user');
+
     // Logout route
     Route::post('auth/logout', [AuthController::class, 'logout']);
-
-    // Roles routes
-    Route::post('roles/create', [RoleController::class, 'create']);
-    Route::get('roles/index', [RoleController::class, 'index']);
-    Route::put('roles/update/{id}', [RoleController::class, 'update']);
-    Route::delete('roles/delete/{id}', [RoleController::class, 'delete']);
-
 
     // Customers routes
     Route::post('customers/create', [CustomerController::class, 'create']);
@@ -67,12 +94,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('inventories/update/{id}', [InventoryController::class, 'update']);
     Route::delete('inventories/delete/{id}', [InventoryController::class, 'delete']);
 
-    // Permissions routes
-    Route::post('permissions/create', [PermissionController::class, 'create']);
-    Route::get('permissions/index', [PermissionController::class, 'index']);
-    Route::put('permissions/update/{id}', [PermissionController::class, 'update']);
-    Route::delete('permissions/delete/{id}', [PermissionController::class, 'delete']);
-
     // OrderProduct routes
     Route::post('orders/{orderId}/products/{productId}/create', [OrderProductController::class, 'addProductToOrder']);
     Route::get('orders/products/index', [OrderProductController::class, 'getAllOrderProducts']);
@@ -84,10 +105,4 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('inventories/products/index', [InventoryProductController::class, 'getAllInventoryProducts']);
     Route::put('inventories/{inventoryId}/products/{productId}/update', [InventoryProductController::class, 'updateProductInInventory']);
     Route::delete('inventories/{inventoryId}/products/{productId}/delete', [InventoryProductController::class, 'deleteProductFromInventory']);
-
-    // PermissionRole routes
-    Route::post('permissions/{permissionId}/roles/{roleId}/create', [PermissionRoleController::class, 'addPermissionToRole']);
-    Route::get('permissions/roles/index', [PermissionRoleController::class, 'getAllPermissionRoles']);
-    Route::delete('permissions/{permissionId}/roles/{roleId}/delete', [PermissionRoleController::class, 'deletePermissionFromRole']);
-    
 });

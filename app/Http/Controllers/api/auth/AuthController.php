@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api\auth;
 
 use App\Models\User;
+use App\Models\Role;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -18,7 +19,7 @@ class AuthController extends Controller
             $validateUser = Validator::make($request->all(), [
                 'username' => 'required|string|max:255|unique:users',
                 'password' => 'required|string|min:6',
-                'role_id' => 'required|integer|exists:roles,id',
+                'role_id' => 'nullable|integer|exists:roles,id',
             ]);
 
             if ($validateUser->fails()) {
@@ -31,8 +32,8 @@ class AuthController extends Controller
 
             $user = User::create([
                 'username' => $request->username,
-                'password' => Hash::make($request->password),
-                'role_id' => $request->role_id
+                'password' => bcrypt($request->password),
+                'role_id' => Role::where('name', 'User')->first()->id,
             ]);
 
             $token = $user->createToken('token')->plainTextToken;
