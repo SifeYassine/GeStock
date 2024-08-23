@@ -30,20 +30,21 @@ class AuthController extends Controller
                 ], 401);
             }
 
+            // Check if the first user to register
+            $role_id = User::count() == 0 
+            ? Role::where('name', 'Admin')->first()->id 
+            : Role::where('name', 'User')->first()->id;
+
             $user = User::create([
                 'username' => $request->username,
                 'password' => bcrypt($request->password),
-                'role_id' => Role::where('name', 'User')->first()->id,
+                'role_id' => $role_id,
             ]);
-
-            $token = $user->createToken('token')->plainTextToken;
 
             return response()->json([
                 'status' => true,
                 'message' => 'User registered successfully',
-                'user' => $user,
-                'access_token' => $token,
-                'token_type' => 'Bearer',
+                'user' => $user
             ], 200);
         } catch (\Throwable $th) {
             return response()->json([

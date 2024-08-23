@@ -48,7 +48,7 @@ return [
     // Later the local storage is used when edits are made
     'default_headers' => [
         'Content-Type' => 'application/json',
-        'Authorization' => 'Bearer <Bearer_token>',
+        'Authorization' => 'Bearer 16|ABK9IEaaJ2XAcd02vW4H2b996Pn4BeHGBQAx4WDW6b1461f2',
     ],
 
     // By default, LRD group your routes by the first /path.
