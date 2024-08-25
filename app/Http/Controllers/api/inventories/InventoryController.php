@@ -27,11 +27,19 @@ class InventoryController extends Controller
                 ], 401);
             }
 
-            $inventory = Inventory::create([
-                'capacity' => $request->capacity,
-                'current_stock' => $request->current_stock,
-                'location' => $request->location,
-            ]);
+            // only if capacity is greater or equal to current stock
+            if ($request->capacity >= $request->current_stock) {
+                $inventory = Inventory::create([
+                    'capacity' => $request->capacity,
+                    'current_stock' => $request->current_stock,
+                    'location' => $request->location,
+                ]);
+            } else {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Current stock cannot be greater than capacity'
+                ], 401);
+            }
 
             return response()->json([
                 'status' => true,
